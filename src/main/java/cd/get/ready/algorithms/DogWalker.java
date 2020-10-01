@@ -6,24 +6,37 @@ import java.util.Map;
 
 public class DogWalker {
     public int numberOfWalksCalculator(int[] dogSizes){
-        int numberOfWalks = 0;
 
+        Map<Integer, Integer> map = countOccurrences(dogSizes);
+
+
+        return countWalks(map);
+    }
+
+    private Map<Integer,Integer> countOccurrences(int[] dogSizes) {
         Map<Integer, Integer> map = new HashMap<Integer, Integer>();
 
-        for (int i = 0; i < dogSizes.length; i++) {
-            map.merge(dogSizes[i], 1, Integer::sum);
+        for(int size: dogSizes) {
+            addSizetoMap(map,size);
         }
 
-        for (Integer i : map.values())
-            if(i % 2 == 0) {
-                int result = i / 2;
-                numberOfWalks += result;
-            } else if (i == 1) {
-                numberOfWalks++;
-            } else if(i % 2 != 0 && (i - 1) % 2 == 0) {
-                int result1 = i / 2;
-                numberOfWalks += result1 + 1;
-            }
+        return map;
+    }
+
+    private void addSizetoMap(Map<Integer,Integer> map, int size) {
+        if(map.containsKey(size)) {
+            map.put(size,map.get(size)+1);
+        } else {
+            map.put(size,1);
+        }
+    }
+
+    private int countWalks(Map<Integer,Integer> map) {
+        int numberOfWalks = 0;
+
+        for(int dogs : map.values()) {
+            numberOfWalks += Math.ceil(dogs/2.0f);
+        }
 
         return numberOfWalks;
     }
